@@ -451,6 +451,31 @@ void cmd_node(char **args, int num, FILE *rsp)
 				fail(rsp, "node %s: Invalid resize handle argument: '%s'.\n", *(args - 1), *args);
 				break;
 			}
+		} else if (streq("-A", *args) || streq("--absolute_move", *args)) {
+			num--, args++;
+			if (num < 1) {
+				fail(rsp, "node %s: Not enough arguments.\n", *(args - 1));
+				break;
+			}
+			if (trg.node == NULL) {
+				fail(rsp, "Node is null.\n");
+				break;
+			}
+			xcb_rectangle_t argrect;
+			if (!parse_rectangle(*args, &argrect)) {
+				fail(rsp, "node %s: Invalid rect argument: '%s'.\n", *(args - 1), *args);
+				break;
+			}
+			xcb_rectangle_t rect = get_rectangle(NULL, NULL, trg.node);
+			int dx = argrect.x - rect.x, dy = argrect.y - rect.y;
+			if (!move_client(&trg, dx, dy)) {
+				fail(rsp, "Failed to move client.\n");
+				break;
+			}
+			if (!resize_client(&trg, HANDLE_BOTTOM_RIGHT, argrect.x + argrect.width, argrect.y + argrect.height, false)) {
+				fail(rsp, "Failed to resize client.\n");
+				break;
+			}
 		} else if (streq("-r", *args) || streq("--ratio", *args)) {
 			num--, args++;
 			if (num < 1) {
