@@ -382,7 +382,7 @@ bool parse_rectangle(char *s, xcb_rectangle_t *r)
 {
 	uint16_t w, h;
 	int16_t x, y;
-	if (sscanf(s, "%hux%hu+%hi+%hi", &w, &h, &x, &y) != 4) {
+	if (sscanf(s, "%hux%hu%hi%hi", &w, &h, &x, &y) != 4) {
 		return false;
 	}
 	r->width = w;
