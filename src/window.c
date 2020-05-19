@@ -151,7 +151,7 @@ bool manage_window(xcb_window_t win, rule_consequence_t *csq, int fd)
 
 	monitor_t *mm = monitor_from_client(c);
 	embrace_client(mm, c);
-	adapt_geometry(&mm->rectangle, &m->rectangle, n);
+	//adapt_geometry(&mm->rectangle, &m->rectangle, n);
 
 	if (csq->center) {
 		window_center(m, c);
