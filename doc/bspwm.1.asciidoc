@@ -13,7 +13,7 @@ bspwm - Binary space partitioning window manager
 Synopsis
 --------
 
-*bspwm* [*-h*|*-v*|*-c* 'CONFIG_PATH']
+*bspwm* [*-h*|*-v*|*-R*|*-c* 'CONFIG_PATH']
 
 *bspc* 'DOMAIN' ['SELECTOR'] 'COMMANDS'
 
@@ -35,6 +35,9 @@ Options
 
 *-v*::
 	Print the version and exit.
+
+*-R*::
+    Print a readiness notification to file descriptor 3.
 
 *-c* 'CONFIG_PATH'::
 	Use the given configuration file.

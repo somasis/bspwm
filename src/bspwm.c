@@ -32,6 +32,7 @@
 #include <sys/un.h>
 #include <signal.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include <stdbool.h>
 #include <string.h>
 #include <xcb/xinerama.h>
@@ -102,11 +103,16 @@ int main(int argc, char *argv[])
 	xcb_generic_event_t *event;
 	char *end;
 	int opt;
+	bool readiness = false;
+	int readiness_fd = 3;
 
-	while ((opt = getopt(argc, argv, "hvc:s:o:")) != -1) {
+	while ((opt = getopt(argc, argv, "Rhvc:s:o:")) != -1) {
 		switch (opt) {
+			case 'R':
+				readiness = true;
+				break;
 			case 'h':
-				printf(WM_NAME " [-h|-v|-c CONFIG_PATH]\n");
+				printf(WM_NAME " [-h|-v|-R|-c CONFIG_PATH]\n");
 				exit(EXIT_SUCCESS);
 				break;
 			case 'v':
@@ -197,6 +203,13 @@ int main(int argc, char *argv[])
 	signal(SIGPIPE, SIG_IGN);
 	run_config(run_level);
 	running = true;
+
+	if (readiness) {
+		if (fcntl(readiness_fd, F_GETFD) < 0)
+			warn("Failed to open the readiness file descriptor.\n");
+		write(readiness_fd, "\n", 1);
+		close(readiness_fd);
+	}
 
 	while (running) {
 
